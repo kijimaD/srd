@@ -201,12 +201,13 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const fileParam = urlParams.get('file');
                 const pageParam = parseInt(urlParams.get('page')) || 1;
+                const halfParam = urlParams.get('half') === 'bottom' ? false : true;
 
                 if (fileParam) {
-                    const matchingDiv = Array.from(document.querySelectorAll('.item.file-item'))
+                    const matchingDiv = Array.from(document.querySelectorAll('.item'))
                         .find(div => div.dataset.filename === fileParam);
                     if (matchingDiv) {
-                        loadPDF('/api/pdf/' + fileParam, matchingDiv, fileParam, pageParam);
+                        loadPDF('/api/pdf/' + fileParam, matchingDiv, fileParam, pageParam, halfParam);
                     }
                 }
             } catch (error) {
@@ -223,7 +224,7 @@
 
         let currentFilename = null;
 
-        async function loadPDF(url, element, filename, initialPage = 1) {
+        async function loadPDF(url, element, filename, initialPage = 1, initialIsTop = true) {
             document.querySelectorAll('.item').forEach(el => {
                 el.classList.remove('active');
             });
@@ -243,7 +244,7 @@
                 });
                 pdfDoc = await loadingTask.promise;
                 pageNum = initialPage;
-                isTopHalf = true;
+                isTopHalf = initialIsTop;
                 renderPage(pageNum, isTopHalf);
                 updateURL();
             } catch (error) {
@@ -256,6 +257,7 @@
                 const params = new URLSearchParams();
                 params.set('file', currentFilename);
                 params.set('page', pageNum);
+                params.set('half', isTopHalf ? 'top' : 'bottom');
                 const newURL = window.location.pathname + '?' + params.toString();
                 window.history.replaceState({}, '', newURL);
             }
