@@ -1,261 +1,134 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Theater</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --sidebar-width: 320px;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
             height: 100vh;
             overflow: hidden;
-            background: #1a1a1a;
-            color: #fff;
+            background: #0d1117;
         }
 
         #sidebar {
-            width: 300px;
-            background: #2a2a2a;
-            overflow-y: auto;
-            border-right: 1px solid #444;
-            transition: margin-left 0.3s ease;
+            width: var(--sidebar-width);
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #161b22;
+            border-right: 1px solid #30363d;
         }
 
         #sidebar.hidden {
-            margin-left: -300px;
-        }
-
-        #sidebar h2 {
-            padding: 20px;
-            background: #333;
-            border-bottom: 1px solid #444;
-            font-size: 16px;
-        }
-
-        #current-path {
-            padding: 10px 20px;
-            background: #252525;
-            border-bottom: 1px solid #444;
-            font-size: 12px;
-            color: #888;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #back-btn {
-            background: #444;
-            border: none;
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.2s;
-        }
-
-        #back-btn:hover {
-            background: #555;
-        }
-
-        #back-btn:disabled {
-            background: #333;
-            color: #666;
-            cursor: not-allowed;
-        }
-
-        .path-text {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .item {
-            padding: 12px 20px;
-            cursor: pointer;
-            border-bottom: 1px solid #333;
-            transition: background 0.2s;
-            font-size: 13px;
-            word-break: break-all;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .item:hover {
-            background: #3a3a3a;
-        }
-
-        .item.active {
-            background: #0066cc;
-        }
-
-        .item-icon {
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .item-name {
-            flex: 1;
-        }
-
-        .directory-item {
-            color: #6cb4ff;
-        }
-
-        .file-item {
-            color: #fff;
-        }
-
-        #viewer-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        #pdf-info {
-            padding: 4px 20px;
-            background: #333;
-            border-bottom: 1px solid #444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        #toggle-sidebar {
-            background: #444;
-            border: none;
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            flex-shrink: 0;
-        }
-
-        #toggle-sidebar:hover {
-            background: #555;
-        }
-
-        #pdf-name {
-            font-size: 14px;
-            font-weight: 500;
-            flex: 1;
-        }
-
-        #zoom-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .zoom-btn {
-            background: #444;
-            border: none;
-            color: #fff;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-
-        .zoom-btn:hover {
-            background: #555;
-        }
-
-        .zoom-btn:active {
-            background: #666;
-        }
-
-        #zoom-level {
-            font-size: 12px;
-            color: #aaa;
-            min-width: 45px;
-            text-align: center;
-        }
-
-        #nav-hint {
-            font-size: 12px;
-            color: #888;
-            flex-shrink: 0;
-        }
-
-        #page-info {
-            font-size: 13px;
-            color: #aaa;
-            flex-shrink: 0;
-        }
-
-        #canvas-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            padding: 1em;
+            margin-left: calc(var(--sidebar-width) * -1);
         }
 
         #pdf-canvas {
             max-width: 100%;
             max-height: 100%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #aaa;
+        .item {
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            margin: 4px 8px;
+        }
+
+        .item:hover {
+            background: #21262d !important;
+            transform: translateX(2px);
+        }
+
+        .item.active {
+            background: #1f6feb !important;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .toolbar {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            backdrop-filter: blur(8px);
+        }
+
+        .sidebar-header {
+            background: #0d1117;
+            border-bottom: 1px solid #30363d;
+        }
+
+        #zoom-level {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            min-width: 52px;
         }
     </style>
 </head>
-<body>
-    <div id="sidebar">
-        <h2>PDF Browser</h2>
-        <div id="current-path">
-            <button id="back-btn">←</button>
-            <span class="path-text" id="path-display">.</span>
+<body class="d-flex text-white">
+    <div id="sidebar" class="overflow-auto">
+        <div class="sidebar-header p-3">
+            <h1 class="fs-5 fw-bold mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-pdf-fill text-primary"></i>
+                PDF Theater
+            </h1>
         </div>
-        <div id="pdf-list"></div>
-    </div>
-    <div id="viewer-container">
-        <div id="pdf-info">
-            <button id="toggle-sidebar" title="Toggle Sidebar (S)">☰</button>
-            <div id="pdf-name">Select a PDF from the list</div>
-            <div id="zoom-controls">
-                <button class="zoom-btn" id="zoom-out" title="Zoom Out (-)">−</button>
-                <div id="zoom-level">100%</div>
-                <button class="zoom-btn" id="zoom-in" title="Zoom In (+)">+</button>
-                <button class="zoom-btn" id="zoom-reset" title="Reset Zoom (0)">⊙</button>
+        <div class="p-2 px-3 d-flex align-items-center gap-2 border-bottom" style="border-color: #30363d !important;">
+            <button id="back-btn" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <div class="flex-grow-1 d-flex align-items-center gap-2">
+                <i class="bi bi-folder2-open text-warning-emphasis" style="font-size: 14px;"></i>
+                <span class="small text-muted text-truncate" id="path-display">.</span>
             </div>
-            <div id="nav-hint">Click to navigate • Left: Previous • Right: Next • Space: Next</div>
-            <div id="page-info"></div>
         </div>
-        <div id="canvas-container">
+        <div id="pdf-list" class="py-2"></div>
+    </div>
+
+    <div id="viewer-container" class="flex-grow-1 d-flex flex-column">
+        <div class="toolbar py-2 px-3 d-flex align-items-center gap-3">
+            <button id="toggle-sidebar" class="btn btn-outline-secondary btn-icon" title="Toggle Sidebar (S)">
+                <i class="bi bi-layout-sidebar"></i>
+            </button>
+
+            <div class="flex-grow-1 d-flex align-items-center gap-2 text-truncate">
+                <i class="bi bi-file-earmark-text text-info"></i>
+                <span id="pdf-name" class="small fw-medium">Select a PDF from the list</span>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-outline-secondary btn-icon" id="zoom-out" title="Zoom Out (-)">
+                    <i class="bi bi-zoom-out"></i>
+                </button>
+                <div id="zoom-level" class="small text-muted text-center fw-medium">100%</div>
+                <button class="btn btn-outline-secondary btn-icon" id="zoom-in" title="Zoom In (+)">
+                    <i class="bi bi-zoom-in"></i>
+                </button>
+                <button class="btn btn-outline-secondary btn-icon" id="zoom-reset" title="Reset Zoom (0)">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+            </div>
+
+            <div class="vr"></div>
+
+            <div id="page-info" class="small text-muted fw-medium"></div>
+        </div>
+
+        <div id="canvas-container" class="flex-grow-1 d-flex justify-content-center align-items-center overflow-hidden position-relative p-4" style="cursor: pointer; background: #0d1117;">
             <canvas id="pdf-canvas"></canvas>
         </div>
     </div>
@@ -294,26 +167,27 @@
                 listContainer.innerHTML = '';
 
                 if (data.items.length === 0) {
-                    listContainer.innerHTML = '<div class="loading">No files found</div>';
+                    listContainer.innerHTML = '<div class="text-center p-4 text-muted">No files found</div>';
                     return;
                 }
 
                 data.items.forEach(item => {
                     const div = document.createElement('div');
-                    div.className = item.type === 'directory' ? 'item directory-item' : 'item file-item';
+                    const isDir = item.type === 'directory';
+                    div.className = `item p-2 px-3 d-flex align-items-center gap-2 small`;
+                    div.style.cursor = 'pointer';
 
-                    const icon = document.createElement('span');
-                    icon.className = 'item-icon';
-                    icon.textContent = item.type === 'directory' ? '📁' : '📄';
+                    const icon = document.createElement('i');
+                    icon.className = `bi ${isDir ? 'bi-folder-fill text-warning' : 'bi-file-earmark-pdf text-danger'} flex-shrink-0`;
 
                     const name = document.createElement('span');
-                    name.className = 'item-name';
+                    name.className = `flex-grow-1 text-break ${isDir ? 'fw-medium' : ''}`;
                     name.textContent = item.name;
 
                     div.appendChild(icon);
                     div.appendChild(name);
 
-                    if (item.type === 'directory') {
+                    if (isDir) {
                         div.onclick = () => loadDirectory(item.path);
                     } else {
                         div.dataset.filename = item.path;
@@ -337,7 +211,7 @@
                 }
             } catch (error) {
                 console.error('Error loading directory:', error);
-                document.getElementById('pdf-list').innerHTML = '<div class="loading">Error loading directory</div>';
+                document.getElementById('pdf-list').innerHTML = '<div class="text-center p-4 text-muted">Error loading directory</div>';
             }
         }
 
@@ -350,8 +224,12 @@
         let currentFilename = null;
 
         async function loadPDF(url, element, filename, initialPage = 1) {
-            document.querySelectorAll('.item').forEach(el => el.classList.remove('active'));
-            if (element) element.classList.add('active');
+            document.querySelectorAll('.item').forEach(el => {
+                el.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
 
             currentFilename = filename;
             document.getElementById('pdf-name').textContent = filename;
