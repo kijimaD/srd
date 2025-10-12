@@ -47,13 +47,14 @@ function listDirectory(dir, basePath = '') {
 
 app.get('/api/browse', (req, res) => {
     const requestedPath = req.query.path || '.';
+    const baseDir = path.join(__dirname, 'pdfs');
 
     // Security: prevent directory traversal
     const safePath = path.normalize(requestedPath).replace(/^(\.\.[\/\\])+/, '');
-    const absolutePath = path.resolve(__dirname, safePath);
+    const absolutePath = path.resolve(baseDir, safePath);
 
-    // Ensure the path is within the project directory
-    if (!absolutePath.startsWith(__dirname)) {
+    // Ensure the path is within the pdfs directory
+    if (!absolutePath.startsWith(baseDir)) {
         return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -75,11 +76,12 @@ app.get('/api/browse', (req, res) => {
 
 app.get('/api/pdf/*', (req, res) => {
     const requestedPath = req.params[0];
+    const baseDir = path.join(__dirname, 'pdfs');
     const safePath = path.normalize(requestedPath).replace(/^(\.\.[\/\\])+/, '');
-    const absolutePath = path.resolve(__dirname, safePath);
+    const absolutePath = path.resolve(baseDir, safePath);
 
     // Security check
-    if (!absolutePath.startsWith(__dirname)) {
+    if (!absolutePath.startsWith(baseDir)) {
         return res.status(403).send('Access denied');
     }
 
