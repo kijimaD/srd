@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 8013;
+const PORT = 8000;
 
 app.use(express.static('.'));
 

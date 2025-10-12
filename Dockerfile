@@ -10,13 +10,14 @@ RUN npm install --production
 
 # Copy application files
 COPY index.html .
+COPY favicon.svg .
 COPY server.js .
 
 # Create pdfs directory for mounting
 RUN mkdir -p pdfs
 
 # Expose port
-EXPOSE 8013
+EXPOSE 8000
 
 # Start server
 CMD ["npm", "start"]

@@ -1,21 +1,32 @@
 # PDF Theater
 
-PDFをスライド形式で読むためのビューア
+PDFをスライド形式で読むためのポータブルビューア。
 
 ## Docker で起動
+
+### イメージをpull
+
+```
+# 起動
+docker run -d --name srd-server \
+  --restart unless-stopped \
+  -p 8015:8000 \
+  -v $(pwd):/app/pdfs \
+  ghcr.io/kijimad/srd:main
+```
 
 ### ローカルでビルド
 
 ```bash
 # イメージをビルド
-docker build -t pdf-theater .
+docker build -t srd-dev .
 
 # 起動
-docker run -d --name pdf-theater \
+docker run -d --name srd-dev \
   --restart unless-stopped \
-  -p 8013:8013 \
+  -p 8015:8000 \
   -v $(pwd):/app/pdfs \
-  pdf-theater
+  srd-dev
 ```
 
 ### ファイル構成
