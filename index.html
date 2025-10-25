@@ -233,7 +233,9 @@
             }
 
             currentFilename = filename;
-            document.getElementById('pdf-name').textContent = filename;
+            const displayName = filename.replace(/\d{8}T\d{6}--/g, '').replace(/\.[^.]+$/, '');
+            document.getElementById('pdf-name').textContent = displayName;
+            document.title = displayName + ' - Theater';
 
             try {
                 const loadingTask = pdfjsLib.getDocument({
