@@ -150,7 +150,7 @@
         const canvas = document.getElementById('pdf-canvas');
         const ctx = canvas.getContext('2d');
         let currentPath = '.';
-        let sidebarVisible = true;
+        let sidebarVisible = localStorage.getItem('sidebarVisible') !== 'false';
 
         async function loadDirectory(path = '.') {
             try {
@@ -423,6 +423,7 @@
 
         function toggleSidebar() {
             sidebarVisible = !sidebarVisible;
+            localStorage.setItem('sidebarVisible', sidebarVisible);
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('hidden');
 
@@ -444,6 +445,11 @@
                 toggleSidebar();
             }
         });
+
+        // Restore sidebar state on load
+        if (!sidebarVisible) {
+            document.getElementById('sidebar').classList.add('hidden');
+        }
 
         loadDirectory();
     </script>
