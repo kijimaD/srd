@@ -68,13 +68,13 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
 
   return (
     <Box
-      w="320px"
+      w="80"
       bg="gray.800"
       borderRight="1px"
       borderColor="gray.700"
       overflowY="auto"
       transition="margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-      ml={visible ? 0 : '-320px'}
+      ml={visible ? 0 : '-80'}
     >
       <Box bg="gray.900" p={3} borderBottom="1px" borderColor="gray.700">
         <Heading size="md" display="flex" alignItems="center" gap={2}>
@@ -94,7 +94,7 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
             aria-label="Go back"
           />
           <Flex flex={1} align="center" gap={2} overflow="hidden">
-            <Icon as={BsFolder2Open} color="yellow.600" fontSize="14px" />
+            <Icon as={BsFolder2Open} color="yellow.600" fontSize="sm" />
             <Text fontSize="sm" color="gray.400" noOfLines={1}>{currentPath}</Text>
           </Flex>
         </HStack>
@@ -125,7 +125,7 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
               borderRadius="md"
               cursor="pointer"
               bg={currentPdfPath === item.path ? 'blue.600' : 'transparent'}
-              _hover={{ bg: currentPdfPath === item.path ? 'blue.600' : 'gray.700', transform: 'translateX(2px)' }}
+              _hover={{ bg: currentPdfPath === item.path ? 'blue.600' : 'gray.700', transform: 'translateX(0.5)' }}
               transition="all 0.2s"
               onClick={() => handleItemClick(item)}
             >

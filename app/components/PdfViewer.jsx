@@ -258,8 +258,8 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
-            borderRadius: '4px'
+            boxShadow: '0 0.5rem 2rem rgba(0, 0, 0, 0.6)',
+            borderRadius: '0.25rem'
           }}
         />
       </Box>

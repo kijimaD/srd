@@ -43,9 +43,9 @@ function Toolbar({
       borderBottom="1px"
       borderColor="gray.700"
       spacing={3}
-      backdropFilter="blur(8px)"
+      backdropFilter="blur(0.5rem)"
     >
-      <HStack spacing={2} minW="200px">
+      <HStack spacing={2} minW="50">
         <IconButton
           icon={<BsLayoutSidebar />}
           variant="outline"
@@ -74,7 +74,7 @@ function Toolbar({
         </Slider>
       </Flex>
 
-      <Text fontSize="sm" color="gray.400" fontWeight="medium" fontFamily="mono" minW="90px" textAlign="center">
+      <Text fontSize="sm" color="gray.400" fontWeight="medium" fontFamily="mono" minW="22" textAlign="center">
         {pageInfo}
       </Text>
     </HStack>

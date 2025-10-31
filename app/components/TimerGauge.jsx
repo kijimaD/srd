@@ -36,10 +36,10 @@ function TimerGauge() {
   return (
     <CircularProgress
       value={percentage}
-      size="50px"
+      size="12"
       color={color}
       trackColor="gray.700"
-      thickness="8px"
+      thickness="0.5rem"
     >
       <CircularProgressLabel fontSize="xs" fontFamily="mono" color="gray.300">
         {formatTime(remainingTime)}
