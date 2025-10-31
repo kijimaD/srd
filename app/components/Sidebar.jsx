@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Box, VStack, HStack, Text, Icon, IconButton, Heading, Flex, Input } from '@chakra-ui/react'
 import { BsFilePdfFill, BsFolderFill, BsFolder2Open, BsArrowLeft } from 'react-icons/bs'
 
@@ -9,6 +9,7 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
   const [items, setItems] = useState([])
   const [hasLoadedFromUrl, setHasLoadedFromUrl] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const selectedItemRef = useRef(null)
 
   useEffect(() => {
     loadDirectory('.')
@@ -37,6 +38,16 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlParams, items, hasLoadedFromUrl, currentPath])
+
+  useEffect(() => {
+    // スクロールする
+    if (selectedItemRef.current && currentPdfPath) {
+      selectedItemRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      })
+    }
+  }, [currentPdfPath, items])
 
   const goBack = () => {
     if (currentPath === '.' || currentPath === '') return
@@ -119,6 +130,7 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
           filteredItems.map((item, index) => (
             <Box
               key={index}
+              ref={currentPdfPath === item.path ? selectedItemRef : null}
               px={3}
               py={2}
               mx={2}
