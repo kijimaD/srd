@@ -15,6 +15,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
   const canvasRef = useRef(null)
   const containerRef = useRef(null)
   const baseScaleRef = useRef(1.0)
+  const renderTaskRef = useRef(null)
   const outputScale = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) * 2 : 2
   const OVERLAP_RATIO = 0.04 // 4% overlap between top and bottom halves
 
@@ -78,6 +79,11 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
   const renderPage = async (num, topHalf) => {
     if (!pdfDoc || !canvasRef.current) return
 
+    // Cancel previous render task if it exists
+    if (renderTaskRef.current) {
+      renderTaskRef.current.cancel()
+    }
+
     const page = await pdfDoc.getPage(num)
     baseScaleRef.current = calculateScale(page)
     const scale = baseScaleRef.current * zoomLevel
@@ -105,8 +111,17 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
       viewport: viewport
     }
 
-    await page.render(renderContext).promise
-    updateURL()
+    renderTaskRef.current = page.render(renderContext)
+    try {
+      await renderTaskRef.current.promise
+      renderTaskRef.current = null
+      updateURL()
+    } catch (error) {
+      // Ignore cancellation errors
+      if (error.name !== 'RenderingCancelledException') {
+        console.error('Rendering error:', error)
+      }
+    }
   }
 
   const updateURL = () => {
@@ -151,6 +166,13 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
     } else {
       onNextPage()
     }
+  }
+
+  const handlePageChange = (newPageNum, newIsTop) => {
+    if (!pdfDoc) return
+    if (newPageNum < 1 || newPageNum > pdfDoc.numPages) return
+    setPageNum(newPageNum)
+    setIsTopHalf(newIsTop)
   }
 
   const handleKeyDown = (e) => {
@@ -216,6 +238,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
         totalPages={pdfDoc?.numPages || 0}
         isTopHalf={isTopHalf}
         timerKey={timerKey}
+        onPageChange={handlePageChange}
       />
       <Box
         ref={containerRef}
