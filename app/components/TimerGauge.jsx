@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { HStack, Text, Progress } from '@chakra-ui/react'
+import { CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 
 const TIMER_MAX_SECONDS = 300 // 5 minutes
 
@@ -31,23 +31,17 @@ function TimerGauge() {
   const isLow = remainingTime < 120
 
   return (
-    <HStack spacing={2}>
-      <Text
-        fontSize="xs"
-        color="gray.400"
-        fontFamily="mono"
-        minW="45px"
-      >
+    <CircularProgress
+      value={percentage}
+      size="50px"
+      color={isLow ? 'red.400' : 'blue.400'}
+      trackColor="gray.700"
+      thickness="8px"
+    >
+      <CircularProgressLabel fontSize="xs" fontFamily="mono" color="gray.300">
         {formatTime(remainingTime)}
-      </Text>
-      <Progress
-        value={percentage}
-        w="100px"
-        borderRadius="full"
-        colorScheme={isLow ? 'red' : 'blue'}
-        bg="gray.700"
-      />
-    </HStack>
+      </CircularProgressLabel>
+    </CircularProgress>
   )
 }
 
