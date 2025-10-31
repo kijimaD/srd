@@ -16,6 +16,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
   const containerRef = useRef(null)
   const baseScaleRef = useRef(1.0)
   const outputScale = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) * 2 : 2
+  const OVERLAP_RATIO = 0.04 // 4% overlap between top and bottom halves
 
   useEffect(() => {
     // Load PDF.js dynamically on client side only
@@ -66,9 +67,10 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
 
     const viewport = page.getViewport({ scale: 1.0 })
     const halfHeight = viewport.height / 2
+    const displayHeight = halfHeight * (1 + OVERLAP_RATIO)
 
     const scaleX = containerWidth / viewport.width
-    const scaleY = containerHeight / halfHeight
+    const scaleY = containerHeight / displayHeight
 
     return Math.min(scaleX, scaleY)
   }
@@ -82,16 +84,17 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
 
     const viewport = page.getViewport({ scale })
     const halfHeight = viewport.height / 2
+    const displayHeight = halfHeight * (1 + OVERLAP_RATIO)
 
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
 
     canvas.width = Math.floor(viewport.width * outputScale)
-    canvas.height = Math.floor(halfHeight * outputScale)
+    canvas.height = Math.floor(displayHeight * outputScale)
     canvas.style.width = Math.floor(viewport.width) + 'px'
-    canvas.style.height = Math.floor(halfHeight) + 'px'
+    canvas.style.height = Math.floor(displayHeight) + 'px'
 
-    const yOffset = topHalf ? 0 : -halfHeight
+    const yOffset = topHalf ? 0 : -halfHeight * (1 - OVERLAP_RATIO)
     const transform = outputScale !== 1
       ? [outputScale, 0, 0, outputScale, 0, yOffset * outputScale]
       : [1, 0, 0, 1, 0, yOffset]
