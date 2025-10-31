@@ -32,12 +32,17 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
     if (urlParams && items.length > 0 && !hasLoadedFromUrl && currentPath === '.') {
       const matchingItem = items.find(item => item.path === urlParams.file)
       if (matchingItem) {
-        handlePdfClick(matchingItem, urlParams.page, urlParams.isTop)
+        onPdfSelect({
+          url: '/api/pdf/' + matchingItem.path,
+          path: matchingItem.path,
+          name: matchingItem.name,
+          initialPage: urlParams.page,
+          initialIsTop: urlParams.isTop
+        })
         setHasLoadedFromUrl(true)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlParams, items, hasLoadedFromUrl, currentPath])
+  }, [urlParams, items, hasLoadedFromUrl, currentPath, onPdfSelect])
 
   useEffect(() => {
     // スクロールする
