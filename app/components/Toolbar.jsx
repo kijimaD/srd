@@ -51,7 +51,7 @@ function Toolbar({
           variant="outline"
           size="sm"
           onClick={onToggleSidebar}
-          title="Toggle Sidebar (S)"
+          title="Toggle Sidebar"
           aria-label="Toggle sidebar"
         />
         <Icon as={BsFileEarmarkText} color="cyan.400" />

@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Box, VStack, HStack, Text, Icon, IconButton, Heading, Flex } from '@chakra-ui/react'
+import { Box, VStack, HStack, Text, Icon, IconButton, Heading, Flex, Input } from '@chakra-ui/react'
 import { BsFilePdfFill, BsFolderFill, BsFolder2Open, BsArrowLeft } from 'react-icons/bs'
 
 function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
   const [currentPath, setCurrentPath] = useState('.')
   const [items, setItems] = useState([])
   const [hasLoadedFromUrl, setHasLoadedFromUrl] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     loadDirectory('.')
@@ -19,6 +20,7 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
       const data = await response.json()
       setCurrentPath(data.currentPath)
       setItems(data.items)
+      setSearchQuery('') // Clear search when changing directory
     } catch (error) {
       console.error('Error loading directory:', error)
     }
@@ -60,6 +62,10 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
     }
   }
 
+  const filteredItems = items.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <Box
       w="320px"
@@ -77,26 +83,40 @@ function Sidebar({ visible, onPdfSelect, currentPdfPath, urlParams }) {
         </Heading>
       </Box>
 
-      <HStack p={2} px={3} borderBottom="1px" borderColor="gray.700" spacing={2}>
-        <IconButton
-          icon={<BsArrowLeft />}
+      <VStack spacing={2} p={2} px={3} borderBottom="1px" borderColor="gray.700">
+        <HStack spacing={2} w="100%">
+          <IconButton
+            icon={<BsArrowLeft />}
+            size="sm"
+            variant="outline"
+            onClick={goBack}
+            isDisabled={currentPath === '.' || currentPath === ''}
+            aria-label="Go back"
+          />
+          <Flex flex={1} align="center" gap={2} overflow="hidden">
+            <Icon as={BsFolder2Open} color="yellow.600" fontSize="14px" />
+            <Text fontSize="sm" color="gray.400" noOfLines={1}>{currentPath}</Text>
+          </Flex>
+        </HStack>
+        <Input
+          placeholder="Search..."
           size="sm"
-          variant="outline"
-          onClick={goBack}
-          isDisabled={currentPath === '.' || currentPath === ''}
-          aria-label="Go back"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          bg="gray.900"
+          borderColor="gray.600"
+          _hover={{ borderColor: 'gray.500' }}
+          _focus={{ borderColor: 'blue.400', boxShadow: '0 0 0 1px var(--chakra-colors-blue-400)' }}
         />
-        <Flex flex={1} align="center" gap={2} overflow="hidden">
-          <Icon as={BsFolder2Open} color="yellow.600" fontSize="14px" />
-          <Text fontSize="sm" color="gray.400" noOfLines={1}>{currentPath}</Text>
-        </Flex>
-      </HStack>
+      </VStack>
 
       <VStack spacing={0} py={2} align="stretch">
-        {items.length === 0 ? (
-          <Text textAlign="center" p={4} color="gray.500">No files found</Text>
+        {filteredItems.length === 0 ? (
+          <Text textAlign="center" p={4} color="gray.500">
+            {items.length === 0 ? 'No files found' : 'No matches found'}
+          </Text>
         ) : (
-          items.map((item, index) => (
+          filteredItems.map((item, index) => (
             <Box
               key={index}
               px={3}

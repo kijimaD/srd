@@ -177,16 +177,16 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
   }
 
   const handleKeyDown = (e) => {
-    if (e.key === 's' || e.key === 'S') {
-      e.preventDefault()
-      onToggleSidebar()
+    // 文字入力中はショートカットを無視する
+    const target = e.target
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
       return
     }
 
     if (!pdfDoc) return
 
     if (e.key === 'ArrowLeft') onPrevPage()
-    if (e.key === 'ArrowRight' || e.key === ' ') {
+    if (e.key === 'ArrowRight') {
       e.preventDefault()
       onNextPage()
     }
