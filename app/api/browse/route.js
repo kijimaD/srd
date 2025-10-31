@@ -39,7 +39,7 @@ function listDirectory(dir, basePath = '') {
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const requestedPath = searchParams.get('path') || '.'
-  const baseDir = path.join(process.cwd(), 'pdfs')
+  const baseDir = process.env.PDF_DIR || process.cwd()
 
   // Security: prevent directory traversal
   const safePath = path.normalize(requestedPath).replace(/^(\.\.[\/\\])+/, '')

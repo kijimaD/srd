@@ -11,7 +11,7 @@ PDFをスライド形式で読むためのポータブルビューア。
 docker run -d --name srd-server \
   --restart unless-stopped \
   -p 8015:8000 \
-  -v $(pwd):/app/pdfs \
+  -v $(pwd):/pdfs \
   ghcr.io/kijimad/srd:main
 ```
 
@@ -25,7 +25,7 @@ docker build -t srd-dev .
 docker run -d --name srd-dev \
   --restart unless-stopped \
   -p 8015:8000 \
-  -v $(pwd):/app/pdfs \
+  -v $(pwd):/pdfs \
   srd-dev
 ```
 
@@ -38,5 +38,5 @@ docker run -d --name srd-dev \
 
 ```bash
 npm install
-npm start
+npm run dev
 ```
