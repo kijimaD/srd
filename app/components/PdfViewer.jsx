@@ -209,10 +209,6 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
       <Toolbar
         onToggleSidebar={onToggleSidebar}
         pdfName={displayName}
-        zoomLevel={zoomLevel}
-        onZoomIn={() => setZoomLevel(prev => Math.min(prev * 1.2, 5.0))}
-        onZoomOut={() => setZoomLevel(prev => Math.max(prev / 1.2, 0.2))}
-        onZoomReset={() => setZoomLevel(1.0)}
         pageNum={pageNum}
         totalPages={pdfDoc?.numPages || 0}
         isTopHalf={isTopHalf}
