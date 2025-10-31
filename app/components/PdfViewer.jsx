@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Flex, Box } from '@chakra-ui/react'
 import Toolbar from './Toolbar'
+import TimerGauge from './TimerGauge'
 
 function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPage, initialIsTop }) {
   const [pdfjsLib, setPdfjsLib] = useState(null)
@@ -230,14 +231,13 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
   }, [pdfName, displayName])
 
   return (
-    <Flex flex={1} direction="column" bg="gray.900">
+    <Flex flex={1} direction="column" bg="gray.900" position="relative">
       <Toolbar
         onToggleSidebar={onToggleSidebar}
         pdfName={displayName}
         pageNum={pageNum}
         totalPages={pdfDoc?.numPages || 0}
         isTopHalf={isTopHalf}
-        timerKey={timerKey}
         onPageChange={handlePageChange}
       />
       <Box
@@ -262,6 +262,14 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
             borderRadius: '4px'
           }}
         />
+      </Box>
+      <Box
+        position="fixed"
+        bottom={4}
+        right={4}
+        zIndex={1000}
+      >
+        <TimerGauge key={timerKey} />
       </Box>
     </Flex>
   )

@@ -28,13 +28,16 @@ function TimerGauge() {
   }
 
   const percentage = (remainingTime / TIMER_MAX_SECONDS) * 100
-  const isLow = remainingTime < 120
+
+  // Calculate color from green (120) → yellow (60) → red (0)
+  const hue = percentage * 1.2 // 100% = 120 (green), 50% = 60 (yellow), 0% = 0 (red)
+  const color = `hsl(${hue}, 80%, 50%)`
 
   return (
     <CircularProgress
       value={percentage}
       size="50px"
-      color={isLow ? 'red.400' : 'blue.400'}
+      color={color}
       trackColor="gray.700"
       thickness="8px"
     >

@@ -6,7 +6,6 @@ import {
   Text,
   Flex,
   Icon,
-  Divider,
   Slider,
   SliderTrack,
   SliderFilledTrack,
@@ -14,7 +13,6 @@ import {
   Box
 } from '@chakra-ui/react'
 import { BsLayoutSidebar, BsFileEarmarkText } from 'react-icons/bs'
-import TimerGauge from './TimerGauge'
 
 function Toolbar({
   onToggleSidebar,
@@ -22,7 +20,6 @@ function Toolbar({
   pageNum,
   totalPages,
   isTopHalf,
-  timerKey,
   onPageChange
 }) {
   const halfText = isTopHalf ? '上' : '下'
@@ -77,15 +74,9 @@ function Toolbar({
         </Slider>
       </Flex>
 
-      <HStack spacing={3}>
-        <Text fontSize="sm" color="gray.400" fontWeight="medium" fontFamily="mono" minW="90px" textAlign="center">
-          {pageInfo}
-        </Text>
-
-        <Divider orientation="vertical" h="24px" />
-
-        <TimerGauge key={timerKey} />
-      </HStack>
+      <Text fontSize="sm" color="gray.400" fontWeight="medium" fontFamily="mono" minW="90px" textAlign="center">
+        {pageInfo}
+      </Text>
     </HStack>
   )
 }
