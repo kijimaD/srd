@@ -20,7 +20,7 @@ const theme = extendTheme({
 
 export function Providers({ children }) {
   return (
-    <CacheProvider>
+    <CacheProvider prepend={false}>
       <ChakraProvider theme={theme}>
         {children}
       </ChakraProvider>

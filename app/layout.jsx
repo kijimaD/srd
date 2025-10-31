@@ -1,5 +1,3 @@
-import { Providers } from './providers'
-
 export const metadata = {
   title: 'Theater',
   description: 'PDF Slide Viewer',
@@ -12,7 +10,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body suppressHydrationWarning>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   )

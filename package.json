@@ -4,7 +4,6 @@
   "type": "module",
   "description": "PDF Slide Viewer",
   "scripts": {
-    "postinstall": "copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.mjs public",
     "dev": "next dev -p 8000",
     "build": "next build",
     "start": "next start -p 8000"
@@ -34,7 +33,6 @@
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^9.2.1",
-    "copyfiles": "^2.4.1",
     "vite": "^5.0.8"
   }
 }

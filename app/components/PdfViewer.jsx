@@ -23,7 +23,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
   useEffect(() => {
     // Load PDF.js dynamically on client side only
     import('pdfjs-dist').then((pdfjs) => {
-      pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'
+      pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/build/pdf.worker.mjs'
       setPdfjsLib(pdfjs)
     })
   }, [])
