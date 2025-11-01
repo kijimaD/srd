@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Flex, Box } from '@chakra-ui/react'
 import Toolbar from './Toolbar'
-import TimerGauge from './TimerGauge'
+import ReadingStats from './ReadingStats'
 
 function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPage, initialIsTop }) {
   const [pdfjsLib, setPdfjsLib] = useState(null)
@@ -269,7 +269,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
         right={4}
         zIndex={1000}
       >
-        <TimerGauge key={timerKey} />
+        <ReadingStats timerKey={timerKey} pageNum={pageNum} isTopHalf={isTopHalf} />
       </Box>
     </Flex>
   )
