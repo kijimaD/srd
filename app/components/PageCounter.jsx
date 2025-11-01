@@ -2,13 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Box, CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
+import { getPageVisits, savePageVisits } from '../utils/pageVisits'
 
 function PageCounter({ pageNum, isTopHalf, pdfName, filterType = 'hourly', maxPages = 10, color = 'cyan', label = 'pages' }) {
   const [pageChangeCount, setPageChangeCount] = useState(0)
-
-  const getStorageKey = () => {
-    return `pageVisits_${pdfName}`
-  }
 
   const getFilterTimestamp = () => {
     if (filterType === 'daily') {
@@ -34,9 +31,7 @@ function PageCounter({ pageNum, isTopHalf, pdfName, filterType = 'hourly', maxPa
   }, [pageNum, isTopHalf])
 
   const updatePageChangeCount = () => {
-    const storageKey = getStorageKey()
-    const stored = localStorage.getItem(storageKey)
-    const visits = stored ? JSON.parse(stored) : []
+    const visits = getPageVisits(pdfName)
     const filterTime = getFilterTimestamp()
     const recentVisits = visits.filter(visit => visit.timestamp >= filterTime)
 
@@ -47,9 +42,7 @@ function PageCounter({ pageNum, isTopHalf, pdfName, filterType = 'hourly', maxPa
     if (!pdfName) return
 
     const now = Date.now()
-    const storageKey = getStorageKey()
-    const stored = localStorage.getItem(storageKey)
-    let visits = stored ? JSON.parse(stored) : []
+    let visits = getPageVisits(pdfName)
 
     // Check if this page was already visited (check all visits, not just recent)
     const alreadyVisited = visits.some(
@@ -64,7 +57,7 @@ function PageCounter({ pageNum, isTopHalf, pdfName, filterType = 'hourly', maxPa
       const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000
       visits = visits.filter(visit => visit.timestamp >= sevenDaysAgo)
 
-      localStorage.setItem(storageKey, JSON.stringify(visits))
+      savePageVisits(pdfName, visits)
     }
 
     // Always update count, even if already visited
