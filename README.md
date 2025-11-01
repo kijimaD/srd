@@ -29,11 +29,6 @@ docker run -d --name srd-dev \
   srd-dev
 ```
 
-### ファイル構成
-
-- **イメージに含まれる**: index.html, server.js, node_modules, public/
-- **マウントされる**: カレントディレクトリ → /app/pdfs（PDFファイルをここに配置）
-
 ## 開発
 
 ```bash
