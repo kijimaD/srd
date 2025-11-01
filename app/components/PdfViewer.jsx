@@ -132,7 +132,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
     params.set('page', pageNum)
     params.set('half', isTopHalf ? 'top' : 'bottom')
     const newURL = window.location.pathname + '?' + params.toString()
-    window.history.replaceState({}, '', newURL)
+    window.history.pushState({}, '', newURL)
   }
 
   const onPrevPage = () => {
