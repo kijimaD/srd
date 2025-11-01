@@ -12,11 +12,13 @@ function MilestoneBadges({ achievedMilestones }) {
           key={m.threshold}
           label={`${m.label} - ${m.threshold}ページ達成`}
           placement="left"
-          hasArrow
-          bg="gray.900"
+          bg="gray.800"
           color="white"
           fontSize="sm"
           fontWeight="bold"
+          borderWidth="1px"
+          borderColor="gray.600"
+          boxShadow="0 4px 12px rgba(0,0,0,0.5)"
         >
           <Box
             position="relative"
