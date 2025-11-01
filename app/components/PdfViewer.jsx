@@ -269,7 +269,7 @@ function PdfViewer({ sidebarVisible, onToggleSidebar, pdfUrl, pdfName, initialPa
         right={4}
         zIndex={1000}
       >
-        <ReadingStats timerKey={timerKey} pageNum={pageNum} isTopHalf={isTopHalf} />
+        <ReadingStats timerKey={timerKey} pageNum={pageNum} isTopHalf={isTopHalf} pdfName={pdfName} />
       </Box>
     </Flex>
   )

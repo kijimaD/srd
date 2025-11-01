@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react'
 import { Box, CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 
-function PageCounter({ pageNum, isTopHalf, filterType = 'hourly', maxPages = 10, color = 'cyan', label = 'pages' }) {
+function PageCounter({ pageNum, isTopHalf, pdfName, filterType = 'hourly', maxPages = 10, color = 'cyan', label = 'pages' }) {
   const [pageChangeCount, setPageChangeCount] = useState(0)
+
+  const getStorageKey = () => {
+    return `pageVisits_${pdfName}`
+  }
 
   const getFilterTimestamp = () => {
     if (filterType === 'daily') {
@@ -20,7 +24,7 @@ function PageCounter({ pageNum, isTopHalf, filterType = 'hourly', maxPages = 10,
   useEffect(() => {
     // Calculate initial page change count
     updatePageChangeCount()
-  }, [])
+  }, [pdfName])
 
   useEffect(() => {
     // Record page change
@@ -30,34 +34,41 @@ function PageCounter({ pageNum, isTopHalf, filterType = 'hourly', maxPages = 10,
   }, [pageNum, isTopHalf])
 
   const updatePageChangeCount = () => {
-    const stored = localStorage.getItem('pageVisits')
+    const storageKey = getStorageKey()
+    const stored = localStorage.getItem(storageKey)
     const visits = stored ? JSON.parse(stored) : []
     const filterTime = getFilterTimestamp()
     const recentVisits = visits.filter(visit => visit.timestamp >= filterTime)
 
-    // Clean up old entries
-    localStorage.setItem('pageVisits', JSON.stringify(recentVisits))
     setPageChangeCount(recentVisits.length)
   }
 
   const recordPageChange = () => {
-    const now = Date.now()
-    const stored = localStorage.getItem('pageVisits')
-    const visits = stored ? JSON.parse(stored) : []
-    const filterTime = getFilterTimestamp()
+    if (!pdfName) return
 
-    // Filter recent visits and check if this page was already visited
-    const recentVisits = visits.filter(visit => visit.timestamp >= filterTime)
-    const alreadyVisited = recentVisits.some(
+    const now = Date.now()
+    const storageKey = getStorageKey()
+    const stored = localStorage.getItem(storageKey)
+    let visits = stored ? JSON.parse(stored) : []
+
+    // Check if this page was already visited (check all visits, not just recent)
+    const alreadyVisited = visits.some(
       visit => visit.pageNum === pageNum && visit.isTopHalf === isTopHalf
     )
 
-    // Only add if not already visited in the time period
+    // Only add if not already visited
     if (!alreadyVisited) {
-      recentVisits.push({ pageNum, isTopHalf, timestamp: now })
-      localStorage.setItem('pageVisits', JSON.stringify(recentVisits))
-      setPageChangeCount(recentVisits.length)
+      visits.push({ pageNum, isTopHalf, timestamp: now })
+
+      // Clean up very old entries (older than 7 days)
+      const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000
+      visits = visits.filter(visit => visit.timestamp >= sevenDaysAgo)
+
+      localStorage.setItem(storageKey, JSON.stringify(visits))
     }
+
+    // Always update count, even if already visited
+    updatePageChangeCount()
   }
 
   const percentage = Math.min((pageChangeCount / maxPages) * 100, 100)
